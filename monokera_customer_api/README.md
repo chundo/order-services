@@ -82,7 +82,7 @@ DATABASE_URL=postgresql://localhost/customers_development
 RABBITMQ_URL=amqp://guest:guest@localhost:5672/
 ```
 
-##  Cómo Ejecutar el Servicio
+## Cómo Ejecutar el Servicio
 
 ### Sin Docker
 
