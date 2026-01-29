@@ -9,34 +9,6 @@ El **Servicio de Clientes** es responsable de:
 - Permitir que el Servicio de Pedidos valide la existencia de clientes
 - Consumir eventos de RabbitMQ para actualizar el contador de pedidos
 
-## Arquitectura
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                        ARQUITECTURA                              │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  ┌──────────────────┐      HTTP        ┌──────────────────┐    │
-│  │  ORDER SERVICE   │ ──────────────── │ CUSTOMER SERVICE │    │
-│  │   (Puerto 3000)  │ GET /customers/:id  (Puerto 3001)   │    │
-│  └────────┬─────────┘                  └──────────────────┘    │
-│           │                                     ▲               │
-│           │ Publish                             │ Consume       │
-│           │ (order.created)                     │ (order.created)
-│           ▼                                     │               │
-│  ┌──────────────────────────────────────────────┴──────────┐   │
-│  │                      RABBITMQ                            │   │
-│  │         Exchange: monokera_events (topic)                │   │
-│  │         Queue: customer_order_events                     │   │
-│  └──────────────────────────────────────────────────────────┘   │
-│                                                                  │
-│  ┌──────────────────┐                  ┌──────────────────┐    │
-│  │    PostgreSQL    │                  │    PostgreSQL    │    │
-│  │    orders_db     │                  │   customers_db   │    │
-│  └──────────────────┘                  └──────────────────┘    │
-└─────────────────────────────────────────────────────────────────┘
-```
-
 ## Requisitos del Sistema
 
 - Ruby 3.4.5

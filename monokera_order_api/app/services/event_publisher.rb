@@ -152,7 +152,7 @@ class EventPublisher
   def connection_options
     # Use RABBITMQ_URL env variable if available (Docker), otherwise use config
     rabbitmq_url = ENV["RABBITMQ_URL"]
-    
+
     if rabbitmq_url.present?
       rabbitmq_url  # Return URL string directly for Bunny.new
     else

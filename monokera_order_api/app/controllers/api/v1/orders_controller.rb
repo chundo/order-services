@@ -43,7 +43,7 @@ module Api
       # @param order [Hash] Order attributes
       # @return [JSON] Created order or errors
       #
-      # 1. Usuario crea orden 
+      # 1. Usuario crea orden
       def create
         result = Orders::CreateService.call(**order_params.to_h.symbolize_keys)
 

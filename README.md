@@ -2,7 +2,7 @@
 
 Prueba técnica para Backend Developer en Monokera.
 
-## 📋 Descripción
+## Descripción
 
 Sistema compuesto por dos microservicios que demuestran:
 - Desarrollo de **APIs REST** en Rails
@@ -11,35 +11,29 @@ Sistema compuesto por dos microservicios que demuestran:
 - **PostgreSQL** para persistencia de datos
 - **Pruebas unitarias e integración** con RSpec
 
-## 🏗️ Arquitectura
+## Arquitectura
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                        ARQUITECTURA                              │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  ┌──────────────────┐      HTTP        ┌──────────────────┐    │
-│  │  ORDER SERVICE   │ ──────────────── │ CUSTOMER SERVICE │    │
-│  │   (Puerto 3000)  │ GET /customers/:id  (Puerto 3001)   │    │
-│  └────────┬─────────┘                  └────────┬─────────┘    │
-│           │                                     │               │
-│           │ Publish                             │ Consume       │
-│           │ (order.created)                     │ (order.created)
-│           ▼                                     ▼               │
-│  ┌──────────────────────────────────────────────────────────┐   │
-│  │                      RABBITMQ                            │   │
-│  │         Exchange: monokera_events (topic)                │   │
-│  │         Queue: customer_order_events                     │   │
-│  └──────────────────────────────────────────────────────────┘   │
-│                                                                  │
-│  ┌──────────────────┐                  ┌──────────────────┐    │
-│  │    PostgreSQL    │                  │    PostgreSQL    │    │
-│  │    orders_db     │                  │   customers_db   │    │
-│  └──────────────────┘                  └──────────────────┘    │
-└─────────────────────────────────────────────────────────────────┘
+┌─────────────────┐   HTTP    ┌───────────────────┐
+│  Order Service  │ ────────► │  Customer Service │
+│    :3000        │           │      :3001        │
+└────────┬────────┘           └─────────┬─────────┘
+         │                              │
+         │ publish                      │ consume
+         ▼                              ▼
+┌─────────────────────────────────────────────────┐
+│                   RabbitMQ                      │
+│            (order.created events)               │
+└─────────────────────────────────────────────────┘
+         │                              │
+         ▼                              ▼
+┌─────────────────┐           ┌─────────────────┐
+│   PostgreSQL    │           │   PostgreSQL    │
+│   orders_db     │           │  customers_db   │
+└─────────────────┘           └─────────────────┘
 ```
 
-## 🔄 Flujo de Comunicación
+## Flujo de Comunicación
 
 1. **Crear Pedido**: Cliente envía `POST /api/v1/orders` al Order Service
 2. **Validar Cliente**: Order Service llama a Customer Service via HTTP
@@ -47,7 +41,7 @@ Sistema compuesto por dos microservicios que demuestran:
 4. **Emitir Evento**: Order Service publica `order.created` en RabbitMQ
 5. **Consumir Evento**: Customer Service escucha el evento y actualiza `orders_count`
 
-## 🔧 Requisitos del Sistema
+## Requisitos del Sistema
 
 - Docker y Docker Compose
 - Git
@@ -58,7 +52,7 @@ Sistema compuesto por dos microservicios que demuestran:
 - PostgreSQL 14+
 - RabbitMQ 3.x
 
-## 🚀 Inicio Rápido con Docker
+## Inicio Rápido con Docker
 
 ```bash
 # 1. Clonar el repositorio
@@ -94,7 +88,7 @@ docker-compose logs -f customer_worker
 docker-compose down -v
 ```
 
-## 🖥️ Instalación Local (sin Docker)
+## Instalación Local (sin Docker)
 
 ### 1. Configurar PostgreSQL
 
@@ -121,7 +115,6 @@ sudo systemctl start rabbitmq-server
 ```bash
 cd monokera_order_api
 bundle install
-rails db:migrate db:seed
 rails server -p 3000
 ```
 
@@ -139,7 +132,7 @@ cd monokera_customer_api
 bundle exec rake sneakers:run
 ```
 
-## 🧪 Ejecutar Tests
+## Ejecutar Tests
 
 ```bash
 # Order Service (131 tests)
@@ -154,7 +147,7 @@ bundle exec rspec
 bundle exec rspec --format documentation
 ```
 
-## 📡 Endpoints Disponibles
+## Endpoints Disponibles
 
 ### Order Service (Puerto 3000)
 
@@ -172,7 +165,7 @@ bundle exec rspec --format documentation
 | `GET` | `/api/v1/customers/:id` | Obtener información de un cliente |
 | `GET` | `/up` | Health check |
 
-## 📝 Ejemplos de Uso
+## Ejemplos de Uso
 
 ### Consultar un cliente
 
@@ -230,23 +223,7 @@ curl -X POST http://localhost:3000/api/v1/orders \
 curl "http://localhost:3000/api/v1/orders?customer_id=1"
 ```
 
-## 📊 Cobertura de Tests
-
-| Servicio | Componente | Tests |
-|----------|------------|-------|
-| **Order Service** | Order Model | 24 |
-| | OrdersController | 45 |
-| | CustomerServiceClient | 22 |
-| | EventPublisher | 18 |
-| | Orders::CreateService | 22 |
-| | **Subtotal** | **131** |
-| **Customer Service** | Customer Model | 18 |
-| | CustomersController | 11 |
-| | OrderCreatedWorker | 13 |
-| | **Subtotal** | **42** |
-| **Total** | | **173** |
-
-## 🗂️ Estructura del Proyecto
+## Estructura del Proyecto
 
 ```
 monokera/
@@ -274,7 +251,7 @@ monokera/
     └── README.md
 ```
 
-## 🛠️ Tecnologías Utilizadas
+## Tecnologías Utilizadas
 
 - **Ruby** 3.4.5
 - **Rails** 8.0.4
@@ -287,17 +264,7 @@ monokera/
 - **FactoryBot** - Fixtures para tests
 - **Docker** - Containerización
 
-## 👨‍💻 Autor
-
-Desarrollado como parte de la prueba técnica para Backend Developer en Monokera.
-
-## 📄 Licencia
-
-Este proyecto es privado y confidencial.
-
----
-
-## 🐳 Guía de Ejecución con Docker
+## Guía de Ejecución con Docker
 
 ### Requisitos Previos
 
@@ -397,47 +364,6 @@ docker-compose down -v
    docker-compose restart order_service customer_worker
    ```
 
-#### orders_count no incrementa
-
-El flujo completo es:
-1. Order Service crea orden → Publica evento `order.created` a RabbitMQ
-2. Customer Worker consume el evento → Incrementa `orders_count`
-
-Verificar cada paso:
-```bash
-# 1. Ver si el evento se publicó
-docker logs monokera_order_service 2>&1 | grep "Published"
-
-# 2. Ver si el worker procesó el evento
-docker-compose exec customer_worker cat log/development.log | grep "Incremented"
-```
-
-### Arquitectura de Contenedores
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    docker-compose.yml                        │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐  │
-│  │  postgres   │  │  rabbitmq   │  │   customer_worker   │  │
-│  │   :5432     │  │ :5672/:15672│  │  (sneakers:run)     │  │
-│  └─────────────┘  └─────────────┘  └─────────────────────┘  │
-│         │                │                    │              │
-│         ▼                ▼                    ▼              │
-│  ┌─────────────────────────────────────────────────────────┐│
-│  │                    monokera_network                      ││
-│  └─────────────────────────────────────────────────────────┘│
-│         ▲                ▲                    ▲              │
-│         │                │                    │              │
-│  ┌─────────────┐  ┌─────────────┐                           │
-│  │order_service│  │customer_svc │                           │
-│  │   :3000     │  │   :3001     │                           │
-│  └─────────────┘  └─────────────┘                           │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
-```
-
 ### Variables de Entorno Importantes
 
 Las variables están configuradas en `docker-compose.yml`:
@@ -450,52 +376,4 @@ Las variables están configuradas en `docker-compose.yml`:
 | `CUSTOMER_SERVICE_URL` | http://customer_service:3001 | URL del Customer Service |
 
 > **Nota**: El archivo `.env` local se elimina automáticamente al iniciar los contenedores para evitar conflictos con las variables de Docker.
-
-
-
-
-
-
-
-Basándome en el código que he revisado, aquí están los patrones de diseño usados:
-
-1. Service Object Pattern
-Dónde se usa: Orders::CreateService
-
-Beneficio: Mantiene los controladores delgados y la lógica de negocio testeable y reutilizable.
-
-2. Result Object Pattern
-Dónde se usa: create_service.rb:20-42
-
-Beneficio: Evita excepciones para control de flujo, retorna éxito/fallo con datos estructurados.
-
-3. Publish/Subscribe Pattern (Event-Driven)
-Dónde se usa:
-
-Publisher: EventPublisher
-Subscriber: OrderCreatedWorker
-Beneficio: Desacopla servicios, comunicación asíncrona entre microservicios.
-
-4. Adapter Pattern
-Dónde se usa: CustomerServiceClient
-
-Beneficio: Abstrae la comunicación HTTP con el Customer Service, fácil de mockear en tests.
-
-5. Dependency Injection
-Dónde se usa: create_service.rb:47-54
-
-Beneficio: Permite inyectar mocks/stubs en tests, desacopla dependencias.
-
-Resumen
-Patrón	Archivo	Propósito
-Service Object	create_service.rb	Encapsular lógica de negocio
-Result Object	create_service.rb (Result class)	Manejo estructurado de éxito/error
-Pub/Sub	event_publisher.rb + order_created_worker.rb	Comunicación entre microservicios
-Adapter	customer_service_client.rb	Abstraer llamadas HTTP
-Dependency Injection	create_service.rb (constructor)	Facilitar testing
-
-
-
-
-
 

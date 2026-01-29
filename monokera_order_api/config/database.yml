@@ -17,7 +17,7 @@ default: &default
 development:
   <<: *default
   <% unless ENV['DATABASE_URL'].present? %>
-  database: orders_development
+  database: <%= Settings.database.name %>
   <% end %>
 
 test:

@@ -54,7 +54,7 @@ module Orders
       @event_publisher = event_publisher || EventPublisher.new
     end
 
-    # 2. Usuario crea orden 
+    # 2. Usuario crea orden
     def call
       # Step 1: Validate customer exists
       customer_validation = validate_customer

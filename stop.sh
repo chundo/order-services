@@ -1,11 +1,9 @@
 #!/bin/bash
 
-# ===========================================
-# Script de Parada - Monokera Microservicios
-# ===========================================
+# Script de Parada - Monokera
 
-echo "🛑 Deteniendo Monokera Microservicios..."
+echo "Deteniendo servicios..."
 
 docker-compose down
 
-echo "✅ Servicios detenidos"
+echo "Servicios detenidos"

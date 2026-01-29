@@ -1,0 +1,207 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master, develop]
+  pull_request:
+    branches: [main, master, develop]
+
+jobs:
+  test-order-service:
+    name: Order Service Tests
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: orders_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      rabbitmq:
+        image: rabbitmq:3-alpine
+        ports:
+          - 5672:5672
+        options: >-
+          --health-cmd "rabbitmq-diagnostics -q ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    defaults:
+      run:
+        working-directory: monokera_order_api
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.4'
+          bundler-cache: true
+          working-directory: monokera_order_api
+
+      - name: Setup database
+        env:
+          RAILS_ENV: test
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/orders_test
+          RABBITMQ_URL: amqp://guest:guest@localhost:5672
+        run: |
+          bundle exec rails db:create db:migrate
+
+      - name: Run tests
+        env:
+          RAILS_ENV: test
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/orders_test
+          RABBITMQ_URL: amqp://guest:guest@localhost:5672
+          CUSTOMER_SERVICE_URL: http://localhost:3001
+        run: |
+          bundle exec rspec --format documentation
+
+      - name: Discord notification on success
+        if: success()
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        uses: Ilshidur/action-discord@master
+        with:
+          args: "CI passed for Order Service - All tests completed successfully."
+
+      - name: Discord notification on failure
+        if: failure()
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        uses: Ilshidur/action-discord@master
+        with:
+          args: "CI failed for Order Service - Tests failed. Check the logs for details."
+
+  test-customer-service:
+    name: Customer Service Tests
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: customers_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      rabbitmq:
+        image: rabbitmq:3-alpine
+        ports:
+          - 5672:5672
+        options: >-
+          --health-cmd "rabbitmq-diagnostics -q ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    defaults:
+      run:
+        working-directory: monokera_customer_api
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.4'
+          bundler-cache: true
+          working-directory: monokera_customer_api
+
+      - name: Setup database
+        env:
+          RAILS_ENV: test
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/customers_test
+          RABBITMQ_URL: amqp://guest:guest@localhost:5672
+        run: |
+          bundle exec rails db:create db:migrate
+
+      - name: Run tests
+        env:
+          RAILS_ENV: test
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/customers_test
+          RABBITMQ_URL: amqp://guest:guest@localhost:5672
+        run: |
+          bundle exec rspec --format documentation
+
+      - name: Discord notification on success
+        if: success()
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        uses: Ilshidur/action-discord@master
+        with:
+          args: "CI passed for Customer Service - All tests completed successfully."
+
+      - name: Discord notification on failure
+        if: failure()
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        uses: Ilshidur/action-discord@master
+        with:
+          args: "CI failed for Customer Service - Tests failed. Check the logs for details."
+
+  lint:
+    name: Linting
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.4'
+
+      - name: Lint Order Service
+        working-directory: monokera_order_api
+        run: |
+          gem install rubocop
+          bundle install
+          bundle exec rubocop --parallel || true
+
+      - name: Lint Customer Service
+        working-directory: monokera_customer_api
+        run: |
+          bundle install
+          bundle exec rubocop --parallel || true
+
+  security:
+    name: Security Scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.4'
+
+      - name: Scan Order Service
+        working-directory: monokera_order_api
+        run: |
+          gem install brakeman
+          brakeman -q --no-pager || true
+
+      - name: Scan Customer Service
+        working-directory: monokera_customer_api
+        run: |
+          brakeman -q --no-pager || true

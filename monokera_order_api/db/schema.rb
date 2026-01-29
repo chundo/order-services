@@ -22,7 +22,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_29_030703) do
     t.string "status", default: "pending", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["customer_id"], name: "index_orders_on_customer_id"
-    t.index ["status"], name: "index_orders_on_status"
+    t.index [ "customer_id" ], name: "index_orders_on_customer_id"
+    t.index [ "status" ], name: "index_orders_on_status"
   end
 end
