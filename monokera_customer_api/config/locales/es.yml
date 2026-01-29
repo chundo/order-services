@@ -1,0 +1,61 @@
+# Archivo de traducciones en español para Customer API
+
+es:
+  hello: "Hola mundo"
+
+  # Servicios
+  services:
+    event_consumer:
+      errors:
+        connection_failed: "No se pudo establecer conexión con RabbitMQ: %{message}"
+        authentication_failed: "Falló la autenticación de RabbitMQ: %{message}"
+        consume_failed: "No se pudo consumir el evento: %{message}"
+
+  # Modelos ActiveRecord
+  activerecord:
+    models:
+      customer: "Cliente"
+    attributes:
+      customer:
+        name: "Nombre"
+        email: "Correo electrónico"
+        phone: "Teléfono"
+        address: "Dirección"
+        active: "Activo"
+        orders_count: "Cantidad de órdenes"
+    errors:
+      models:
+        customer:
+          attributes:
+            name:
+              blank: "no puede estar vacío"
+              too_short: "es demasiado corto (mínimo %{count} caracteres)"
+              too_long: "es demasiado largo (máximo %{count} caracteres)"
+            email:
+              blank: "no puede estar vacío"
+              invalid: "no es un correo electrónico válido"
+              taken: "ya está en uso"
+            phone:
+              invalid: "no es un número de teléfono válido"
+            address:
+              too_long: "es demasiado largo (máximo %{count} caracteres)"
+
+  # Respuestas API
+  api:
+    errors:
+      not_found: "Recurso no encontrado"
+      unauthorized: "No autorizado"
+      forbidden: "Prohibido"
+      unprocessable_entity: "Entidad no procesable"
+      internal_server_error: "Error interno del servidor"
+      customer_not_found: "Cliente con ID %{id} no encontrado"
+    success:
+      created: "Recurso creado exitosamente"
+      updated: "Recurso actualizado exitosamente"
+      deleted: "Recurso eliminado exitosamente"
+
+  # Específico de Customer
+  customers:
+    statuses:
+      active: "Activo"
+      inactive: "Inactivo"

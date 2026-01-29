@@ -1,0 +1,88 @@
+# Files in the config/locales directory are used for internationalization and
+# are automatically loaded by Rails. If you want to use locales other than
+# English, add the necessary files in this directory.
+#
+# To use the locales, use `I18n.t`:
+#
+#     I18n.t "hello"
+#
+# In views, this is aliased to just `t`:
+#
+#     <%= t("hello") %>
+#
+# To use a different locale, set it with `I18n.locale`:
+#
+#     I18n.locale = :es
+#
+# This would use the information in config/locales/es.yml.
+#
+# To learn more about the API, please read the Rails Internationalization guide
+# at https://guides.rubyonrails.org/i18n.html.
+#
+# Be aware that YAML interprets the following case-insensitive strings as
+# booleans: `true`, `false`, `on`, `off`, `yes`, `no`. Therefore, these strings
+# must be quoted to be interpreted as strings. For example:
+#
+#     en:
+#       "yes": yup
+#       enabled: "ON"
+
+en:
+  hello: "Hello world"
+
+  # Services
+  services:
+    event_consumer:
+      errors:
+        connection_failed: "Unable to connect to RabbitMQ: %{message}"
+        authentication_failed: "RabbitMQ authentication failed: %{message}"
+        consume_failed: "Failed to consume event: %{message}"
+
+  # ActiveRecord models
+  activerecord:
+    models:
+      customer: "Customer"
+    attributes:
+      customer:
+        name: "Name"
+        email: "Email"
+        phone: "Phone"
+        address: "Address"
+        active: "Active"
+        orders_count: "Orders count"
+    errors:
+      models:
+        customer:
+          attributes:
+            name:
+              blank: "can't be blank"
+              too_short: "is too short (minimum is %{count} characters)"
+              too_long: "is too long (maximum is %{count} characters)"
+            email:
+              blank: "can't be blank"
+              invalid: "is not a valid email"
+              taken: "has already been taken"
+            phone:
+              invalid: "is not a valid phone number"
+            address:
+              too_long: "is too long (maximum is %{count} characters)"
+
+  # API responses
+  api:
+    errors:
+      not_found: "Resource not found"
+      unauthorized: "Unauthorized"
+      forbidden: "Forbidden"
+      unprocessable_entity: "Unprocessable entity"
+      internal_server_error: "Internal server error"
+      customer_not_found: "Customer with ID %{id} not found"
+    success:
+      created: "Resource created successfully"
+      updated: "Resource updated successfully"
+      deleted: "Resource deleted successfully"
+
+  # Customer specific
+  customers:
+    statuses:
+      active: "Active"
+      inactive: "Inactive"

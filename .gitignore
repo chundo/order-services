@@ -1,0 +1,110 @@
+# Ruby / Rails
+*.gem
+*.rbc
+/.config
+/coverage/
+/InstalledFiles
+/pkg/
+/spec/reports/
+/spec/examples.txt
+/test/tmp/
+/test/version_tmp/
+/tmp/
+
+# Documentation cache and generated files
+/.yardoc/
+/_yardoc/
+/doc/
+/rdoc/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+*.local.yml
+
+# Ignore bundler config
+/.bundle
+
+# Ignore all logfiles and tempfiles
+/log/*
+/tmp/*
+!/log/.keep
+!/tmp/.keep
+
+# Ignore pidfiles
+/tmp/pids/*
+!/tmp/pids/.keep
+
+# Ignore storage
+/storage/*
+!/storage/.keep
+/tmp/storage/*
+
+# Ignore master key for decrypting credentials
+/config/master.key
+
+# Bootsnap cache
+/tmp/cache/bootsnap*
+
+# Node modules (if any)
+/node_modules/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Thumbnails
+._*
+
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Coverage reports
+/coverage/
+
+# RubyCritic
+/tmp/rubycritic/
+
+# Docker
+.docker/
+
+# Ignore subproject specific files
+monokera_order_api/log/*
+monokera_order_api/tmp/*
+monokera_order_api/storage/*
+monokera_order_api/coverage/*
+monokera_order_api/.env
+monokera_order_api/.env.local
+monokera_order_api/config/master.key
+
+monokera_customer_api/log/*
+monokera_customer_api/tmp/*
+monokera_customer_api/storage/*
+monokera_customer_api/coverage/*
+monokera_customer_api/.env
+monokera_customer_api/.env.local
+monokera_customer_api/config/master.key
+
+# Keep directories
+!monokera_order_api/log/.keep
+!monokera_order_api/tmp/.keep
+!monokera_order_api/storage/.keep
+!monokera_customer_api/log/.keep
+!monokera_customer_api/tmp/.keep
+!monokera_customer_api/storage/.keep

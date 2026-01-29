@@ -1,0 +1,36 @@
+hostname: localhost
+
+# CORS configuration
+cors_origins: "*"
+
+# Allowed IPs for Rack Attack
+ips:
+  - "127.0.0.1"
+  - "::1"
+  - "localhost"
+
+# Database configuration
+database:
+  adapter: postgresql
+  encoding: unicode
+  pool: 5
+  host: localhost
+  port: 5432
+  name: customers_development
+  username: ""
+  password: ""
+  url: ""
+
+# RabbitMQ configuration
+rabbitmq:
+  host: localhost
+  port: 5672
+  username: guest
+  password: guest
+  vhost: /
+  exchange: monokera_events
+  exchange_type: topic
+  queue: customer_order_events
+  routing_key: "order.*"
+  connection_timeout: 5
+  heartbeat: 30

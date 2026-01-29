@@ -1,0 +1,38 @@
+hostname: <%= ENV['HOSTNAME'] %>
+
+# CORS configuration
+cors_origins: <%= ENV.fetch('CORS_ORIGINS', '*') %>
+
+# Allowed IPs for Rack Attack
+ips:
+  - "127.0.0.1"
+  - "::1"
+  - "localhost"
+
+# Database configuration
+# Use 'url' for full connection string (recommended for production)
+# Example: postgres://user:password@host:port/database
+database:
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  host: <%= ENV.fetch("DATABASE_HOST", "localhost") %>
+  port: <%= ENV.fetch("DATABASE_PORT", 5432) %>
+  name: <%= ENV.fetch("DATABASE_NAME", "customers_production") %>
+  username: <%= ENV.fetch("DATABASE_USERNAME", "customers") %>
+  password: <%= ENV["DATABASE_PASSWORD"] %>
+  url: <%= ENV['DATABASE_URL'] %>
+
+# RabbitMQ configuration
+rabbitmq:
+  host: <%= ENV.fetch('RABBITMQ_HOST', 'localhost') %>
+  port: <%= ENV.fetch('RABBITMQ_PORT', 5672) %>
+  username: <%= ENV.fetch('RABBITMQ_USERNAME', 'guest') %>
+  password: <%= ENV.fetch('RABBITMQ_PASSWORD', 'guest') %>
+  vhost: <%= ENV.fetch('RABBITMQ_VHOST', '/') %>
+  exchange: monokera_events
+  exchange_type: topic
+  queue: customer_order_events
+  routing_key: "order.*"
+  connection_timeout: 5
+  heartbeat: 30

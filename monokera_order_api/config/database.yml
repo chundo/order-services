@@ -1,0 +1,60 @@
+# PostgreSQL configuration
+# Supports DATABASE_URL env variable for Docker or Settings gem for local
+
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  <% if ENV['DATABASE_URL'].present? %>
+  url: <%= ENV['DATABASE_URL'] %>
+  <% else %>
+  host: <%= Settings.database.host %>
+  port: <%= Settings.database.port %>
+  username: <%= Settings.database.username %>
+  password: <%= Settings.database.password %>
+  <% end %>
+
+development:
+  <<: *default
+  <% unless ENV['DATABASE_URL'].present? %>
+  database: orders_development
+  <% end %>
+
+test:
+  <<: *default
+  <% unless ENV['DATABASE_URL'].present? %>
+  database: orders_test
+  <% end %>
+
+production:
+  primary: &primary_production
+    <<: *default
+    <% if Settings.database.url.present? %>
+    url: <%= Settings.database.url %>
+    <% else %>
+    database: <%= Settings.database.name %>
+    <% end %>
+  cache:
+    <<: *primary_production
+    <% if Settings.database.url.present? %>
+    url: <%= Settings.database.url %>
+    <% else %>
+    database: <%= Settings.database.name %>_cache
+    <% end %>
+    migrations_paths: db/cache_migrate
+  queue:
+    <<: *primary_production
+    <% if Settings.database.url.present? %>
+    url: <%= Settings.database.url %>
+    <% else %>
+    database: <%= Settings.database.name %>_queue
+    <% end %>
+    migrations_paths: db/queue_migrate
+  cable:
+    <<: *primary_production
+    <% if Settings.database.url.present? %>
+    url: <%= Settings.database.url %>
+    <% else %>
+    database: <%= Settings.database.name %>_cable
+    <% end %>
+    migrations_paths: db/cable_migrate

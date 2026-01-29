@@ -1,0 +1,107 @@
+# Los archivos en el directorio config/locales se usan para internacionalización
+# y son cargados automáticamente por Rails. Si deseas usar locales diferentes
+# al inglés, agrega los archivos necesarios en este directorio.
+#
+# Para usar los locales, usa `I18n.t`:
+#
+#     I18n.t "hello"
+#
+# En las vistas, esto tiene el alias `t`:
+#
+#     <%= t("hello") %>
+#
+# Para usar un locale diferente, configúralo con `I18n.locale`:
+#
+#     I18n.locale = :es
+#
+# Esto usaría la información en config/locales/es.yml.
+#
+# Para aprender más sobre la API, por favor lee la guía de Internacionalización de Rails
+# en https://guides.rubyonrails.org/i18n.html.
+#
+# Ten en cuenta que YAML interpreta las siguientes cadenas (sin importar mayúsculas/minúsculas)
+# como booleanos: `true`, `false`, `on`, `off`, `yes`, `no`. Por lo tanto, estas cadenas
+# deben estar entre comillas para ser interpretadas como strings. Por ejemplo:
+#
+#     es:
+#       "yes": sí
+#       enabled: "ON"
+
+es:
+  hello: "Hola mundo"
+
+  # Servicios
+  services:
+    customer_service_client:
+      errors:
+        connection_failed: "No se pudo conectar al Servicio de Clientes: %{message}"
+        timeout: "La solicitud al Servicio de Clientes expiró: %{message}"
+        not_found: "Cliente no encontrado"
+        client_error: "Error del cliente"
+        server_error: "Error del Servicio de Clientes"
+        unexpected_response: "Respuesta inesperada"
+    event_publisher:
+      errors:
+        connection_failed: "No se pudo establecer conexión con RabbitMQ: %{message}"
+        authentication_failed: "Falló la autenticación de RabbitMQ: %{message}"
+        publish_failed: "No se pudo publicar el evento: %{message}"
+        server_error: "Error del Servicio de Clientes"
+        unexpected_response: "Respuesta inesperada"
+
+  # Modelos ActiveRecord
+  activerecord:
+    models:
+      order: "Orden"
+    attributes:
+      order:
+        customer_id: "ID del cliente"
+        product_name: "Nombre del producto"
+        quantity: "Cantidad"
+        price: "Precio"
+        status: "Estado"
+    errors:
+      models:
+        order:
+          attributes:
+            customer_id:
+              blank: "no puede estar vacío"
+              not_a_number: "no es un número válido"
+              greater_than: "debe ser mayor que %{count}"
+            product_name:
+              blank: "no puede estar vacío"
+              too_short: "es demasiado corto (mínimo %{count} caracteres)"
+              too_long: "es demasiado largo (máximo %{count} caracteres)"
+            quantity:
+              blank: "no puede estar vacío"
+              not_a_number: "no es un número válido"
+              greater_than: "debe ser mayor que %{count}"
+            price:
+              blank: "no puede estar vacío"
+              not_a_number: "no es un número válido"
+              greater_than_or_equal_to: "debe ser mayor o igual a %{count}"
+            status:
+              blank: "no puede estar vacío"
+              inclusion: "no es un estado válido"
+
+  # Respuestas de API
+  api:
+    errors:
+      not_found: "Recurso no encontrado"
+      unauthorized: "No autorizado"
+      forbidden: "Prohibido"
+      unprocessable_entity: "Entidad no procesable"
+      internal_server_error: "Error interno del servidor"
+      customer_not_found: "Cliente con ID %{id} no encontrado"
+      customer_service_unavailable: "El servicio de clientes no está disponible temporalmente"
+    success:
+      created: "Recurso creado exitosamente"
+      updated: "Recurso actualizado exitosamente"
+      deleted: "Recurso eliminado exitosamente"
+
+  # Específico de órdenes
+  orders:
+    statuses:
+      pending: "Pendiente"
+      processing: "En proceso"
+      completed: "Completada"
+      cancelled: "Cancelada"
